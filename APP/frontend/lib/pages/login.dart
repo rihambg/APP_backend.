@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sugarblood/pages/singin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'enter_page.dart';
 import 'doctorMainpage.dart';
 import '../services/user_service.dart';
-import 'singin.dart'; // Make sure this import points to the correct file
+import 'singin.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -21,6 +21,23 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    final credentials = await UserService.getSavedCredentials();
+    if (credentials['username'] != null && credentials['password'] != null) {
+      setState(() {
+        _usernameController.text = credentials['username']!;
+        _passwordController.text = credentials['password']!;
+        _rememberMe = true;
+      });
+    }
+  }
+
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -30,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final response = await UserService.loginUser(
         usernameOrEmail: _usernameController.text.trim(),
         password: _passwordController.text,
+        rememberMe: _rememberMe,
       );
 
       if (response['success']) {
@@ -129,41 +147,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 32),
-                          const Row(
-                            children: [
-                              Icon(Icons.person, color: Colors.black, size: 20),
-                              SizedBox(width: 8),
-                              Text('Username',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14)),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
                           TextFormField(
                             controller: _usernameController,
-                            decoration:
-                                _inputDecoration("Enter your Username/Email"),
-                            validator: (value) =>
-                                (value == null || value.isEmpty)
-                                    ? 'Please enter your username or email'
-                                    : null,
+                            decoration: _inputDecoration("Username or Email"),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your username or email';
+                              }
+                              if (value.contains('@') &&
+                                  !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                      .hasMatch(value)) {
+                                return 'Please enter a valid email';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 20),
-                          const Row(
-                            children: [
-                              Icon(Icons.key, color: Colors.black, size: 20),
-                              SizedBox(width: 8),
-                              Text('Password',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14)),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
                           TextFormField(
                             controller: _passwordController,
                             obscureText: !_isPasswordVisible,
-                            decoration: _inputDecoration("Enter your Password")
-                                .copyWith(
+                            decoration: _inputDecoration("Password").copyWith(
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _isPasswordVisible
@@ -186,28 +189,23 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Row(
                                 children: [
-                                  SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: Checkbox(
-                                      value: _rememberMe,
-                                      onChanged: (value) => setState(
-                                          () => _rememberMe = value ?? false),
-                                      fillColor: MaterialStateProperty.all(
-                                          Colors.white),
-                                      checkColor: const Color(0xFF9D84E8),
-                                    ),
+                                  Checkbox(
+                                    value: _rememberMe,
+                                    onChanged: (value) => setState(
+                                        () => _rememberMe = value ?? false),
+                                    fillColor:
+                                        MaterialStateProperty.all(Colors.white),
+                                    checkColor: const Color(0xFF9D84E8),
                                   ),
-                                  const SizedBox(width: 4),
                                   const Text('Remember me',
                                       style: TextStyle(
                                           color: Colors.black, fontSize: 12)),
                                 ],
                               ),
-                              GestureDetector(
-                                onTap: () {},
+                              TextButton(
+                                onPressed: () {},
                                 child: const Text(
-                                  'Forget Password ?',
+                                  'Forgot Password?',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 12),
                                 ),
@@ -236,11 +234,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text('Don\'t have account ? ',
+                                const Text('Don\'t have account? ',
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 12)),
-                                GestureDetector(
-                                  onTap: () {
+                                TextButton(
+                                  onPressed: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -248,14 +246,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                               const SignupScreen()),
                                     );
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     "SIGN UP",
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 109, 153, 255),
                                       decoration: TextDecoration.underline,
-                                      decorationColor:
-                                          Color.fromARGB(255, 109, 153, 255),
-                                      decorationThickness: 2,
                                     ),
                                   ),
                                 ),

@@ -1,4 +1,4 @@
-#signup.py 
+# signup.py
 from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash
@@ -6,7 +6,7 @@ import mysql.connector
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
-
+import json
 
 signup_bp = Blueprint('signup', __name__)
 CORS(signup_bp)
@@ -18,6 +18,10 @@ def connect_db():
         password="",
         database="diabetes_management_app"
     )
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ['pdf']
 
 @signup_bp.route("/signup", methods=["POST"])
 def signup():
@@ -76,14 +80,12 @@ def signup():
 @signup_bp.route("/complete-doctor-profile", methods=["POST"])
 def complete_doctor_profile():
     try:
-        # Handle both form data and file upload
         data = request.form.to_dict()
         user_id = data.get("user_id")
         
         required_fields = [
-            "gender", "date_of_birth", "phone_number", 
-            "specialization", "license_number", "experience_years",
-            "hospital_clinic_name"
+            "phone_number", "experience_years", "license_number",
+            "hospital_clinic_name", "country", "city"
         ]
         
         if not all(field in data for field in required_fields):
@@ -92,43 +94,46 @@ def complete_doctor_profile():
         db = connect_db()
         cursor = db.cursor()
 
-        # File handling
+        # Handle base64 document if provided
         document_path = None
-        if 'document' in request.files:
-            file = request.files['document']
-            if file and file.filename != '':
-                if not allowed_file(file.filename):
-                    return jsonify({"error": "Invalid file type"}), 400
-                
-                filename = secure_filename(file.filename)
-                filepath = os.path.join('uploads', 'pdfs', filename)
-                os.makedirs(os.path.dirname(filepath), exist_ok=True)
-                file.save(filepath)
+        document_base64 = request.form.get("document_base64")
+        if document_base64:
+            try:
+                # Decode base64 and save as PDF
+                import base64
+                pdf_data = base64.b64decode(document_base64.split(',')[-1])
+                filename = f"doctor_{user_id}_document.pdf"
+                uploads_dir = os.path.join(os.getcwd(), 'uploads', 'pdfs')
+                os.makedirs(uploads_dir, exist_ok=True)
+                filepath = os.path.join(uploads_dir, filename)
+                with open(filepath, 'wb') as f:
+                    f.write(pdf_data)
                 document_path = f"/pdfs/{filename}"
+            except Exception as e:
+                print(f"Error saving document: {str(e)}")
+                return jsonify({"error": "Invalid document format"}), 400
 
         # Update database
         cursor.execute("""
             UPDATE users 
-            SET gender = %s, date_of_birth = %s, phone_number = %s
+            SET phone_number = %s
             WHERE user_id = %s
-        """, (
-            data["gender"],
-            datetime.strptime(data["date_of_birth"], "%d/%m/%Y").date(),
-            data["phone_number"],
-            user_id
-        ))
+        """, (data["phone_number"], user_id))
 
         cursor.execute("""
             UPDATE doctors 
             SET specialization = %s, license_number = %s, 
                 experience_years = %s, hospital_clinic_name = %s,
-                document_path = %s
+                country = %s, city = %s,
+                document_path = %s, verified = FALSE
             WHERE user_id = %s
         """, (
-            data["specialization"],
+            data.get("specialization", "General Practitioner"),
             data["license_number"],
             data["experience_years"],
             data["hospital_clinic_name"],
+            data["country"],
+            data["city"],
             document_path,
             user_id
         ))
@@ -140,8 +145,10 @@ def complete_doctor_profile():
         print(f"Error in doctor profile completion: {str(e)}")
         return jsonify({"error": "Server error"}), 500
     finally:
-        cursor.close()
-        db.close()
+        if 'cursor' in locals():
+            cursor.close()
+        if 'db' in locals():
+            db.close()
 
 @signup_bp.route("/complete-patient-profile", methods=["POST"])
 def complete_patient_profile():
@@ -151,7 +158,11 @@ def complete_patient_profile():
     required_fields = [
         "gender", "date_of_birth", "phone_number", 
         "diabetes_type", "height", "weight",
-        "emergency_contact_name", "emergency_contact_phone"
+        "emergency_contact_name", "emergency_contact_phone",
+        "allergies", "other_conditions", "medications",
+        "pregnancy_status", "sugar_intake", "diet_type",
+        "exercise_frequency", "smoking", "alcohol",
+        "goals", "reminder_frequency"
     ]
     
     if not all(field in data for field in required_fields):
@@ -175,7 +186,11 @@ def complete_patient_profile():
         cursor.execute("""
             UPDATE patients 
             SET diabetes_type = %s, height = %s, weight = %s,
-                emergency_contact_name = %s, emergency_contact_phone = %s
+                emergency_contact_name = %s, emergency_contact_phone = %s,
+                allergies = %s, other_conditions = %s, medications = %s,
+                pregnancy_status = %s, sugar_intake = %s, diet_type = %s,
+                exercise_frequency = %s, smoking = %s, alcohol = %s,
+                goals = %s, reminder_frequency = %s
             WHERE user_id = %s
         """, (
             data["diabetes_type"],
@@ -183,6 +198,17 @@ def complete_patient_profile():
             data["weight"],
             data["emergency_contact_name"],
             data["emergency_contact_phone"],
+            json.dumps(data["allergies"]) if isinstance(data["allergies"], list) else data["allergies"],
+            json.dumps(data["other_conditions"]) if isinstance(data["other_conditions"], list) else data["other_conditions"],
+            json.dumps(data["medications"]) if isinstance(data["medications"], list) else data["medications"],
+            data["pregnancy_status"],
+            data["sugar_intake"],
+            data["diet_type"],
+            data["exercise_frequency"],
+            data["smoking"],
+            data["alcohol"],
+            json.dumps(data["goals"]) if isinstance(data["goals"], list) else data["goals"],
+            data["reminder_frequency"],
             user_id
         ))
 
@@ -193,4 +219,5 @@ def complete_patient_profile():
         return jsonify({"message": "Patient profile completed successfully"}), 200
 
     except Exception as e:
+        print(f"Error completing patient profile: {str(e)}")
         return jsonify({"error": str(e)}), 500

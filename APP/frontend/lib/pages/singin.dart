@@ -83,7 +83,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Future<void> _handleSignup() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate() || selectedRole == null) return;
 
     setState(() => _isLoading = true);
 
@@ -97,15 +97,20 @@ class _SignupScreenState extends State<SignupScreen> {
       );
 
       if (response['success']) {
+        final userId = response['user_id'] as int;
         if (selectedRole == 'Doctor') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const DoctorSignupScreen()),
+            MaterialPageRoute(
+              builder: (context) => DoctorSignupScreen(userId: userId),
+            ),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const DiabetesFormScreen()),
+            MaterialPageRoute(
+              builder: (context) => DiabetesFormScreen(userId: userId),
+            ),
           );
         }
       } else {
@@ -219,10 +224,16 @@ class _SignupScreenState extends State<SignupScreen> {
                           TextFormField(
                             controller: _emailController,
                             decoration: _inputDecoration('Enter your email'),
-                            validator: (value) =>
-                                (value == null || value.isEmpty)
-                                    ? 'Please enter your email'
-                                    : null,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                  .hasMatch(value)) {
+                                return 'Please enter a valid email';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 18),
                           _buildLabel('Password', Icons.lock),

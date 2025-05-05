@@ -2,41 +2,50 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class DoctorService {
-  static const String baseUrl = 'http://192.168.1.36:5000/api';
+  static const String baseUrl = 'http://192.168.1.37:5000/api';
 
   static Future<bool> completeDoctorProfile({
+    required int userId,
     required String phoneNumber,
     required String experience,
     required String professionalId,
+    required String hospital,
+    required String country,
+    required String city,
     required String? documentPath,
   }) async {
     try {
-      // Create a multipart request
-      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/complete-doctor-profile'));
-      
-      // Add fields
-      request.fields['phone_number'] = phoneNumber;
-      request.fields['experience_years'] = experience;
-      request.fields['license_number'] = professionalId;
-      
-      // Add file if exists
-      if (documentPath != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'document',
-          documentPath,
-        ));
-      }
+      final response = await http.post(
+        Uri.parse('$baseUrl/complete-doctor-profile'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'user_id': userId,
+          'phone_number': phoneNumber,
+          'experience_years': experience,
+          'license_number': professionalId,
+          'hospital_clinic_name': hospital,
+          'country': country,
+          'city': city,
+          'document_base64':
+              documentPath != null ? await _fileToBase64(documentPath) : null,
+        }),
+      );
 
-      // Send the request
-      var response = await request.send();
-      
       if (response.statusCode == 200) {
         return true;
       } else {
+        print('Error response: ${response.body}');
         return false;
       }
     } catch (e) {
+      print('Error in doctor profile completion: $e');
       return false;
     }
+  }
+
+  static Future<String?> _fileToBase64(String filePath) async {
+    // For web, you'll need to implement this differently
+    // This is just a placeholder
+    return null;
   }
 }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'doctor_signup_step2.dart';
-import '../services/doctor_service.dart';
 
 class DoctorSignupScreen extends StatefulWidget {
-  const DoctorSignupScreen({super.key});
+  final int userId; // Add this line to accept userId
+  const DoctorSignupScreen({super.key, required this.userId}); // Update constructor
 
   @override
   State<DoctorSignupScreen> createState() => _DoctorInfoScreenState();
@@ -15,33 +15,9 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _locationController = TextEditingController();
   final _dobController = TextEditingController();
-  bool _isLoading = false;
 
   String? _selectedGender;
   String? _selectedSpeciality;
-
-  Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => _isLoading = true);
-
-    try {
-      // Here you would typically send this data to your backend
-      // along with the user ID from the initial signup
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const DoctorFinalStepScreen(),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +35,10 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
             onPressed: () {},
           ),
         ],
@@ -111,14 +90,18 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
 
                     // Gender Dropdown
                     DropdownButtonFormField<String>(
-                      decoration: _inputDecoration('Select your gender', 'Gender'),
+                      decoration:
+                          _inputDecoration('Select your gender', 'Gender'),
                       value: _selectedGender,
                       items: const [
                         DropdownMenuItem(value: 'Male', child: Text('Male')),
-                        DropdownMenuItem(value: 'Female', child: Text('Female')),
+                        DropdownMenuItem(
+                            value: 'Female', child: Text('Female')),
                       ],
-                      onChanged: (value) => setState(() => _selectedGender = value),
-                      validator: (value) => value == null ? 'Please select gender' : null,
+                      onChanged: (value) =>
+                          setState(() => _selectedGender = value),
+                      validator: (value) =>
+                          value == null ? 'Please select gender' : null,
                     ),
                     const SizedBox(height: 18),
 
@@ -126,7 +109,8 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                     TextFormField(
                       controller: _dobController,
                       readOnly: true,
-                      decoration: _inputDecoration('DD/MM/YYYY', 'Date Of Birth'),
+                      decoration:
+                          _inputDecoration('DD/MM/YYYY', 'Date Of Birth'),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -135,11 +119,13 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                           lastDate: DateTime.now(),
                         );
                         if (pickedDate != null) {
-                          _dobController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+                          _dobController.text =
+                              DateFormat('dd/MM/yyyy').format(pickedDate);
                         }
                       },
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Date of birth required';
+                        if (value == null || value.isEmpty)
+                          return 'Date of birth required';
                         try {
                           DateFormat('dd/MM/yyyy').parseStrict(value);
                         } catch (e) {
@@ -152,15 +138,23 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
 
                     // Speciality Dropdown
                     DropdownButtonFormField<String>(
-                      decoration: _inputDecoration('Select your speciality', 'Speciality'),
+                      decoration: _inputDecoration(
+                          'Select your speciality', 'Speciality'),
                       value: _selectedSpeciality,
                       items: const [
-                        DropdownMenuItem(value: 'Cardiologist', child: Text('Cardiologist')),
-                        DropdownMenuItem(value: 'Endocrinologist', child: Text('Endocrinologist')),
-                        DropdownMenuItem(value: 'General Practitioner', child: Text('General Practitioner')),
+                        DropdownMenuItem(
+                            value: 'Cardiologist', child: Text('Cardiologist')),
+                        DropdownMenuItem(
+                            value: 'Endocrinologist',
+                            child: Text('Endocrinologist')),
+                        DropdownMenuItem(
+                            value: 'General Practitioner',
+                            child: Text('General Practitioner')),
                       ],
-                      onChanged: (value) => setState(() => _selectedSpeciality = value),
-                      validator: (value) => value == null ? 'Please select speciality' : null,
+                      onChanged: (value) =>
+                          setState(() => _selectedSpeciality = value),
+                      validator: (value) =>
+                          value == null ? 'Please select speciality' : null,
                     ),
                     const SizedBox(height: 18),
 
@@ -172,7 +166,8 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                         'Location',
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) return 'Location is required';
+                        if (value == null || value.isEmpty)
+                          return 'Location is required';
                         return null;
                       },
                     ),
@@ -182,7 +177,18 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _submitForm,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DoctorFinalStepScreen(
+                                  userId: widget.userId, // Pass the userId here
+                                ),
+                              ),
+                            );
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black87,
                           foregroundColor: Colors.white,
@@ -191,12 +197,10 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                             borderRadius: BorderRadius.circular(24),
                           ),
                         ),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text(
-                                'Next',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                        child: const Text(
+                          'Next',
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
