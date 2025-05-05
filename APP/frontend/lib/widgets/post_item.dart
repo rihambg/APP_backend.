@@ -3,7 +3,7 @@ import '../models/post_model.dart';
 
 class PostItem extends StatelessWidget {
   final Post post;
-  const PostItem(this.post, {Key? key}) : super(key: key);
+  const PostItem(this.post, {super.key});
 
   @override Widget build(BuildContext c) {
     return Container(

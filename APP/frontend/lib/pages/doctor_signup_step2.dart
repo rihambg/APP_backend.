@@ -226,13 +226,10 @@ class _DoctorFinalStepScreenState extends State<DoctorFinalStepScreen> {
                             disableLengthCheck: true,
                             showDropdownIcon: true,
                             onChanged: (phone) {
-                              if (phone.completeNumber != null) {
-                                _phoneNumber = phone.completeNumber!;
-                              }
-                            },
+                              _phoneNumber = phone.completeNumber!;
+                                                        },
                             validator: (value) {
-                              if (value == null ||
-                                  value.completeNumber == null) {
+                              if (value == null) {
                                 return 'Phone number is required';
                               }
                               return null;
@@ -352,7 +349,7 @@ class _DoctorFinalStepScreenState extends State<DoctorFinalStepScreen> {
                               _agreeToGuidelines = value ?? false;
                             });
                           },
-                          fillColor: MaterialStateProperty.all(Colors.white),
+                          fillColor: WidgetStateProperty.all(Colors.white),
                           checkColor: const Color(0xFF9F8FEF),
                         ),
                         const SizedBox(width: 8),

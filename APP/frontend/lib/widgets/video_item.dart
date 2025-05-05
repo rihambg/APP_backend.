@@ -5,8 +5,7 @@ import '../models/video_model.dart';
 class VideoItem extends StatelessWidget {
   final VideoTutorial video;
   final YoutubePlayerController controller;
-  const VideoItem({required this.video, required this.controller, Key? key})
-      : super(key: key);
+  const VideoItem({required this.video, required this.controller, super.key});
 
   @override
   Widget build(BuildContext c) {

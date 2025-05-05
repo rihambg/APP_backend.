@@ -4,7 +4,7 @@ import '../services/community_service.dart';
 import '../widgets/group_card.dart';
 
 class GroupsTab extends StatefulWidget {
-  const GroupsTab({Key? key}) : super(key: key);
+  const GroupsTab({super.key});
 
   @override
   State<GroupsTab> createState() => _GroupsTabState();

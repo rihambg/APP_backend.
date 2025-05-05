@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class DoctorListingPage extends StatefulWidget {
-  const DoctorListingPage({Key? key}) : super(key: key);
+  const DoctorListingPage({super.key});
 
   @override
   State<DoctorListingPage> createState() => _DoctorListingPageState();
@@ -308,7 +308,7 @@ class _DoctorListingPageState extends State<DoctorListingPage> {
       subtitle: Text(title, style: const TextStyle(fontSize:16)),
       children: [
         Padding(padding: const EdgeInsets.all(16), child: Text(content, style: const TextStyle(fontSize:14))),
-        ButtonBar(children: [
+        OverflowBar(children: [
           IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
           IconButton(icon: const Icon(Icons.comment_outlined), onPressed: () {}),
           IconButton(icon: const Icon(Icons.share), onPressed: () {}),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ChallengeFilter extends StatefulWidget {
   final void Function(String) onCategoryChanged;
-  const ChallengeFilter({Key? key, required this.onCategoryChanged}) : super(key: key);
+  const ChallengeFilter({super.key, required this.onCategoryChanged});
 
   @override
   _ChallengeFilterState createState() => _ChallengeFilterState();

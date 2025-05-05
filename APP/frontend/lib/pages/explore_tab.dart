@@ -12,7 +12,7 @@ import '../widgets/video_item.dart';
 class ExploreTab extends StatefulWidget {
   final String? newPostText;
 
-  const ExploreTab({Key? key, this.newPostText}) : super(key: key);
+  const ExploreTab({super.key, this.newPostText});
 
   @override
   State<ExploreTab> createState() => _ExploreTabState();

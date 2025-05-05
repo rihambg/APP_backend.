@@ -5,7 +5,7 @@ import '../widgets/challenge_card.dart';
 import '../widgets/challenge_filter.dart';
 
 class ChallengesTab extends StatefulWidget {
-  const ChallengesTab({Key? key}) : super(key: key);
+  const ChallengesTab({super.key});
   @override
   _ChallengesTabState createState() => _ChallengesTabState();
 }

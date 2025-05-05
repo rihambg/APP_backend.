@@ -1,22 +1,26 @@
+// blood_sugar_model.dart
 class BloodSugarReading {
-  final DateTime date;
+  final int id;
   final double value;
+  final String readingType;
+  final DateTime date;
+  final String? notes;
 
   BloodSugarReading({
-    required this.date,
+    required this.id,
     required this.value,
+    required this.readingType,
+    required this.date,
+    this.notes,
   });
 
   factory BloodSugarReading.fromJson(Map<String, dynamic> json) {
     return BloodSugarReading(
-      date: DateTime.parse(json['date'] as String),
-      value: (json['value'] as num).toDouble(),
+      id: json['reading_id'],
+      value: json['value'].toDouble(),
+      readingType: json['reading_type'],
+      date: DateTime.parse(json['measured_at']),
+      notes: json['notes'],
     );
-  }
-
-  static List<BloodSugarReading> listFromJson(List<dynamic> list) {
-    return list
-        .map((e) => BloodSugarReading.fromJson(e as Map<String, dynamic>))
-        .toList();
   }
 }

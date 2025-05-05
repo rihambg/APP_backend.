@@ -124,8 +124,9 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                         }
                       },
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return 'Date of birth required';
+                        }
                         try {
                           DateFormat('dd/MM/yyyy').parseStrict(value);
                         } catch (e) {
@@ -166,8 +167,9 @@ class _DoctorInfoScreenState extends State<DoctorSignupScreen> {
                         'Location',
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return 'Location is required';
+                        }
                         return null;
                       },
                     ),

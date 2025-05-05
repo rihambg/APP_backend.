@@ -5,7 +5,7 @@ class GroupCard extends StatelessWidget {
   final Group group;
   final VoidCallback onJoin;
 
-  const GroupCard({Key? key, required this.group, required this.onJoin}) : super(key: key);
+  const GroupCard({super.key, required this.group, required this.onJoin});
 
   @override
   Widget build(BuildContext context) {

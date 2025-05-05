@@ -4,7 +4,7 @@ import 'package:sugarblood/widgets/notification_card.dart';
 import 'package:sugarblood/widgets/filter_chip.dart';
 
 class DoctorPage extends StatefulWidget {
-  const DoctorPage({Key? key}) : super(key: key);
+  const DoctorPage({super.key});
 
   @override
   State<DoctorPage> createState() => _DoctorPageState();

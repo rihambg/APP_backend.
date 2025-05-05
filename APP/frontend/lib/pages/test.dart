@@ -4,7 +4,7 @@ import 'doctor_listing_page.dart';
 import 'community_and_chat_page.dart';
 import 'healthSammary.dart';
 class DiabetesDashboardPage extends StatefulWidget {
-  const DiabetesDashboardPage({Key? key}) : super(key: key);
+  const DiabetesDashboardPage({super.key});
 
   @override
   State<DiabetesDashboardPage> createState() => _DiabetesDashboardPageState();

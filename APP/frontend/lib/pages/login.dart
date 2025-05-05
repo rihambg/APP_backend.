@@ -7,7 +7,7 @@ import '../services/user_service.dart';
 import 'singin.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -194,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     onChanged: (value) => setState(
                                         () => _rememberMe = value ?? false),
                                     fillColor:
-                                        MaterialStateProperty.all(Colors.white),
+                                        WidgetStateProperty.all(Colors.white),
                                     checkColor: const Color(0xFF9D84E8),
                                   ),
                                   const Text('Remember me',

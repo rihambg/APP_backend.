@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../models/question_model.dart';
 import '../services/user_service.dart';

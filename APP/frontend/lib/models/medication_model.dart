@@ -1,26 +1,26 @@
+// medication_model.dart
 class Medication {
+  final int id;
   final String name;
-  final String dose;
+  final String dosage;
   final String time;
   final String status;
 
   Medication({
+    required this.id,
     required this.name,
-    required this.dose,
+    required this.dosage,
     required this.time,
     required this.status,
   });
 
   factory Medication.fromJson(Map<String, dynamic> json) {
     return Medication(
-      name: json['name'] as String,
-      dose: json['dose'] as String,
-      time: json['time'] as String,
-      status: json['status'] as String,
+      id: json['schedule_id'],
+      name: json['medication_name'],
+      dosage: json['dosage'],
+      time: json['specific_times'],
+      status: json['status'] ?? 'pending',
     );
-  }
-
-  static List<Medication> listFromJson(List<dynamic> list) {
-    return list.map((e) => Medication.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

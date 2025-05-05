@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 
 class HealthcareAppointmentsPage extends StatelessWidget {
-  const HealthcareAppointmentsPage({Key? key}) : super(key: key);
+  const HealthcareAppointmentsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

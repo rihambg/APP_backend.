@@ -3,7 +3,7 @@ import '../models/topic_model.dart';
 
 class HashtagChip extends StatelessWidget {
   final Topic topic;
-  const HashtagChip(this.topic, {Key? key}) : super(key: key);
+  const HashtagChip(this.topic, {super.key});
 
   @override Widget build(BuildContext c) {
     return Container(

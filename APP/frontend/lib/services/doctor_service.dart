@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class DoctorService {
-  static const String baseUrl = 'http://192.168.1.37:5000/api';
+  static const String baseUrl = 'http://192.168.1.34:5000/api';
 
   static Future<bool> completeDoctorProfile({
     required int userId,

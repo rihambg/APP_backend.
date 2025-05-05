@@ -3,7 +3,7 @@ import '../models/challenge_model.dart';
 
 class ChallengeCard extends StatelessWidget {
   final Challenge challenge;
-  const ChallengeCard({required this.challenge, Key? key}) : super(key: key);
+  const ChallengeCard({required this.challenge, super.key});
 
   @override
   Widget build(BuildContext context) {

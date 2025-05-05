@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TrendingTopicsHeader extends StatelessWidget {
-  const TrendingTopicsHeader({Key? key}) : super(key: key);
+  const TrendingTopicsHeader({super.key});
   @override Widget build(BuildContext c) {
     return Row(children: [
       const Icon(Icons.local_fire_department, color: Colors.orange),

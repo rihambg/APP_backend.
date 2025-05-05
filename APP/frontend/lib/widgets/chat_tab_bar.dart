@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ChatTabBar extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onTab;
-  const ChatTabBar({required this.selected, required this.onTab, Key? key}) : super(key: key);
+  const ChatTabBar({required this.selected, required this.onTab, super.key});
 
   @override Widget build(BuildContext c) {
     return Container(
