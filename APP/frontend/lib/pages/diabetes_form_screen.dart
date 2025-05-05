@@ -150,10 +150,30 @@ class _DiabetesFormScreenState extends State<DiabetesFormScreen> {
   void _refresh() => setState(() {});
 
   double _sectionProgress(List<Question> questions) {
-    int answered =
-        questions.where((q) => _userAnswers.containsKey(q.answerKey)).length;
+      int answered = questions
+        .where((q) {
+          final ans = _userAnswers[q.answerKey];
+          if (q.multipleChoice) {
+            return ans is List && ans.length == 1; // Enforcing only one value
+          }
+          return ans != null && ans.toString().trim().isNotEmpty;
+        })
+        .length;
     return questions.isEmpty ? 0 : answered / questions.length;
   }
+
+   bool _isFormComplete() {
+    return _allQuestions()
+        .expand((qList) => qList)
+        .every((q) {
+          final ans = _userAnswers[q.answerKey];
+          if (q.multipleChoice) {
+            return ans is List && ans.length == 1;
+          }
+          return ans != null && ans.toString().trim().isNotEmpty;
+        });
+  }
+
 
   Future<void> _submitForm() async {
     if (_userAnswers.length != _totalQuestions) {
@@ -288,19 +308,30 @@ class _DiabetesFormScreenState extends State<DiabetesFormScreen> {
                   _section('Preference and goals', _preferenceQuestions()),
                   const SizedBox(height: 40),
                   ElevatedButton(
-                    onPressed: _isLoading ? null : _submitForm,
+                    onPressed: _isFormComplete()
+                        ? () {
+                            print(_userAnswers);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Form submitted successfully!'),
+                            ));
+                          }
+                        : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
+                      backgroundColor: _isFormComplete()
+                          ? AppColors.primary
+                          : formColors.white,
+                      foregroundColor: _isFormComplete()
+                          ? formColors.white
+                          : formColors.textDark,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 80, vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('Done', style: TextStyle(fontSize: 16)),
+                    child:
+                        const Text('Done', style: TextStyle(fontSize: 16)),
                   ),
                   const SizedBox(height: 20),
                 ],
