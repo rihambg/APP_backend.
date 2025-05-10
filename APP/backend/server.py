@@ -1,4 +1,4 @@
-from db_api.V1._connect_db import FlaskApp
+from db_api.V1._connect_db import FlaskApp, db
 from flask_cors import CORS
 
 from db_api.V1.account import app as account_app
@@ -33,9 +33,7 @@ def count_endpoints_by_prefix(prefix):
     return sum(1 for rule in app.url_map.iter_rules() if rule.rule.startswith(prefix))
 
 
-# Create tables if not exist
-#with app.app_context():
-#    db.create_all()
+
 
 
 @app.route('/')
@@ -74,5 +72,11 @@ app.register_blueprint(additionnal_infos_app, url_prefix='/db_api/api')
 # ...
 
 
+
+# Create tables if not exist (the database should be created manually)
+#with app.app_context():
+#    db.create_all()
+    
+    
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)

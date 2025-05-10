@@ -61,7 +61,7 @@ class CommunityPostReaction(db.Model):
 
 # Model for CommunityPostComment
 class CommunityPostComment(db.Model):
-    __tablename__ = "community_posts_comments"
+    __tablename__ = "community_post_comments"
     
     id_comment = db.Column(db.Integer, primary_key=True)
     id_post = db.Column(db.Integer, db.ForeignKey('community_posts.id_post'),nullable=False)
@@ -85,7 +85,7 @@ class CommunityPostComment(db.Model):
 
 # Model for CommunityPostCommentReaction
 class CommunityPostCommentReaction(db.Model):
-    __tablename__ = "community_posts_comment_reactions"
+    __tablename__ = "community_post_comment_reactions"
     
     id_comment = db.Column(db.Integer,  db.ForeignKey('community_post_comments.id_comment'), nullable=False,primary_key=True)
     id_account = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False, primary_key=True)
