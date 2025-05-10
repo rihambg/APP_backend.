@@ -11,7 +11,7 @@ class Article(db.Model):
     __tablename__ = "articles"
 
     id_article = db.Column(db.Integer, primary_key=True)
-    id_account_writer = db.Column(db.Integer, nullable=False)
+    id_account_writer = db.Column(db.Integer, db.ForeignKey('doctors.id_profile'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
     publish_date = db.Column(db.DateTime, nullable=False)

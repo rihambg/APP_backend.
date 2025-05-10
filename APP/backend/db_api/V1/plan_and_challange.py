@@ -11,15 +11,13 @@ class DietPlan(db.Model):
     __tablename__ = "diet_plan"
     
     id_plan = db.Column(db.Integer, primary_key=True)
-    id_account_doctor = db.Column(db.Integer, nullable=False)
-    id_account_patient = db.Column(db.Integer, nullable=False)
+    id_account_doctor = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
+    id_account_patient = db.Column(db.Integer,db.ForeignKey('accounts.account_id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
     id_challenge = db.Column(db.Integer, db.ForeignKey('challenges.id_challenge'), nullable=True)
-
-    challenge = db.relationship("Challenge", backref=db.backref("diet_plans", lazy=True))
 
     def __repr__(self):
         return f"<DietPlan {self.id_plan}>"
@@ -41,7 +39,7 @@ class Challenge(db.Model):
     __tablename__ = "challenges"
     
     id_challenge = db.Column(db.Integer, primary_key=True)
-    id_account_doctor = db.Column(db.Integer, nullable=False)
+    id_account_doctor = db.Column(db.Integer,  db.ForeignKey('accounts.account_id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
@@ -65,9 +63,7 @@ class ChallengeParticipant(db.Model):
     __tablename__ = "challenge_participant"
     
     id_challenge = db.Column(db.Integer, db.ForeignKey('challenges.id_challenge'), primary_key=True)
-    id_account_patient = db.Column(db.Integer, db.ForeignKey('accounts.id_account'), primary_key=True)
-
-    challenge = db.relationship("Challenge", backref=db.backref("participants", lazy=True))
+    id_account_patient = db.Column(db.Integer, db.ForeignKey('patients.id_profile'), primary_key=True)
 
     def __repr__(self):
         return f"<ChallengeParticipant {self.id_challenge}, {self.id_account_patient}>"

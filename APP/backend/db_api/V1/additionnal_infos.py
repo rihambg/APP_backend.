@@ -69,7 +69,7 @@ class AdditionnalInfos(db.Model):
     __tablename__ = "additionnal_infos"
 
     id = db.Column(db.Integer, primary_key=True)
-    id_patient = db.Column(db.Integer, nullable=False)
+    id_patient = db.Column(db.Integer, db.ForeignKey('patients.id_profile'), nullable=False)
     last_diagnosis = db.Column(db.Enum(LastDiagnosis, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     has_allergies = db.Column(db.Boolean, default=False)
     other_chronic_condition = db.Column(db.Enum(OtherChronicCondition, values_callable=lambda obj: [e.value for e in obj]), nullable=True)
@@ -102,7 +102,7 @@ class WomanAdditionnalInfos(db.Model):
 
 
     id = db.Column(db.Integer, primary_key=True)
-    id_patient = db.Column(db.Integer, nullable=False)
+    id_patient = db.Column(db.Integer, db.ForeignKey('patients.id_profile'), nullable=False)
     last_diagnosis = db.Column(db.Enum(LastDiagnosis, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     has_allergies = db.Column(db.Boolean, default=False)
     other_chronic_condition = db.Column(db.Enum(OtherChronicCondition, values_callable=lambda obj: [e.value for e in obj]), nullable=True)

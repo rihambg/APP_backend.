@@ -37,13 +37,14 @@ class BloodType(Enum):
 class User(db.Model):
     __abstract__ = True
     id_profile = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_account = db.Column(db.Integer, nullable=False)
+    id_account = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     middle_name = db.Column(db.String(255), nullable=True)
     sex = db.Column(db.String(1), nullable=False)  # M or F
     public_phone_number = db.Column(db.String(20), nullable=True)
     public_email = db.Column(db.String(255), nullable=True)
+
 
     def __repr__(self):
         return f"User({self.id_profile}, {self.id_account}, {self.first_name}, {self.last_name}, {self.middle_name}, {self.sex}, {self.public_phone_number}, {self.public_email})"
@@ -64,9 +65,9 @@ class Patient(User):
 class Doctor(User):
     __tablename__ = "doctors"
     speciality = db.Column(db.Enum(DoctorSpeciality, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
-    location_id = db.Column(db.Integer, nullable=False)
+    location_id = db.Column(db.Integer,db.ForeignKey('locations.id_location'), nullable=False)
     bio = db.Column(db.String(500), nullable=True)
-    id_hospital = db.Column(db.Integer, nullable=False)
+    id_hospital = db.Column(db.Integer,db.ForeignKey('hospitals.id_hospital'), nullable=False)
     professional_id = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):

@@ -19,12 +19,13 @@ class CommunityPost(db.Model):
     __tablename__ = "community_posts"
     
     id_post = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_account_writer = db.Column(db.Integer, nullable=False)
+    id_account_writer = db.Column(db.Integer,db.ForeignKey('accounts.account_id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     body = db.Column(db.Text, nullable=False)
     image = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     date_edited = db.Column(db.DateTime, nullable=True)
+
 
     def __repr__(self):
         return f"<CommunityPost {self.id_post}>"
@@ -44,8 +45,8 @@ class CommunityPost(db.Model):
 class CommunityPostReaction(db.Model):
     __tablename__ = "community_post_reactions"
     
-    id_post = db.Column(db.Integer, primary_key=True, foreign_key="community_posts.id_post")
-    id_account = db.Column(db.Integer, nullable=False, primary_key=True)
+    id_post = db.Column(db.Integer, db.ForeignKey('community_posts.id_post'), nullable=False,primary_key=True)
+    id_account = db.Column(db.Integer,db.ForeignKey('accounts.account_id'), nullable=False, primary_key=True)
     reaction = db.Column(db.Enum(Reaction, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
 
     def __repr__(self):
@@ -63,8 +64,8 @@ class CommunityPostComment(db.Model):
     __tablename__ = "community_posts_comments"
     
     id_comment = db.Column(db.Integer, primary_key=True)
-    id_post = db.Column(db.Integer, nullable=False)
-    id_account_writer = db.Column(db.Integer, nullable=False)
+    id_post = db.Column(db.Integer, db.ForeignKey('community_posts.id_post'),nullable=False)
+    id_account_writer = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
     comment = db.Column(db.Text, nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     date_edited = db.Column(db.DateTime, nullable=True)
@@ -86,8 +87,8 @@ class CommunityPostComment(db.Model):
 class CommunityPostCommentReaction(db.Model):
     __tablename__ = "community_posts_comment_reactions"
     
-    id_comment = db.Column(db.Integer, primary_key=True)
-    id_account = db.Column(db.Integer, nullable=False)
+    id_comment = db.Column(db.Integer,  db.ForeignKey('community_post_comments.id_comment'), nullable=False,primary_key=True)
+    id_account = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False, primary_key=True)
     reaction = db.Column(db.Enum(Reaction, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
 
     def __repr__(self):

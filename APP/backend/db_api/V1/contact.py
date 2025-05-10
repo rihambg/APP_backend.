@@ -25,8 +25,8 @@ class Contact(db.Model):
     __tablename__ = "contacts"
     
     id_contact = db.Column(db.Integer, primary_key=True)
-    id_account_sender = db.Column(db.Integer, nullable=False)
-    id_account_reciver = db.Column(db.Integer, nullable=False)
+    id_account_sender = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
+    id_account_reciver = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
     contact_status = db.Column(db.Enum(ContactStatus,  values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     is_emergency_contact = db.Column(db.Boolean, nullable=False)
 
@@ -47,7 +47,7 @@ class Message(db.Model):
     __tablename__ = "messages"
     
     id_message = db.Column(db.Integer, primary_key=True)
-    id_contact = db.Column(db.Integer, nullable=False)
+    id_contact = db.Column(db.Integer, db.ForeignKey('contacts.id_contact'), nullable=False)
     message_text = db.Column(db.Text, nullable=False)
     date_time = db.Column(db.DateTime, default=datetime.utcnow)
     message_status = db.Column(db.Enum(MessageStatus,  values_callable=lambda obj: [e.value for e in obj]), nullable=False)

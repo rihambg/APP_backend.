@@ -17,11 +17,11 @@ class Perspection(db.Model):
     __tablename__ = "perspections"
     
     id_perspection = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_account_doctor = db.Column(db.Integer, nullable=False)
-    id_appointement = db.Column(db.Integer, nullable=False)
+    id_account_doctor = db.Column(db.Integer,  db.ForeignKey('doctors.id_profile'), nullable=False, primary_key=True)
+    id_appointement = db.Column(db.Integer,  db.ForeignKey('patients.id_profile'), nullable=False, primary_key=True)
     id_account_patient = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.String(255), nullable=False)
-    code = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.Text(), nullable=False)
+    code = db.Column(db.String(255), nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
@@ -68,9 +68,6 @@ class PerspectionMedical(db.Model):
     frequency = db.Column(db.String(255), nullable=False)
     date_start = db.Column(db.DateTime, nullable=False)
     date_end = db.Column(db.DateTime, nullable=False)
-
-    perspection = db.relationship("Perspection", backref=db.backref("medicals", lazy=True))
-    medical = db.relationship("Medicals", backref=db.backref("perspections", lazy=True))
 
     def __repr__(self):
         return f"<PerspectionMedical {self.id_perspection}, {self.id_medical}>"

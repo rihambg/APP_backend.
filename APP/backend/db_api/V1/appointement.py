@@ -27,8 +27,8 @@ class Appointment(db.Model):
     id_appointement = db.Column(db.Integer, primary_key=True)
     appointement_type = db.Column(db.Enum(AppointementType,  values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
-    doctor_id = db.Column(db.Integer, nullable=False)
-    patient_id = db.Column(db.Integer, nullable=False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id_profile'), nullable=False)
+    patient_id = db.Column(db.Integer,  db.ForeignKey('patients.id_profile'), nullable=False)
     appointement_status = db.Column(db.Enum(AppointementStatus,  values_callable=lambda obj: [e.value for e in obj]), nullable=False)
 
     def __repr__(self):

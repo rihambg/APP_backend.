@@ -13,7 +13,8 @@ class Hospital(db.Model):
     name_hospital = db.Column(db.String(255), nullable=False)
     postal_code = db.Column(db.String(20), nullable=False)
     street = db.Column(db.String(255), nullable=False)
-    id_location = db.Column(db.Integer, nullable=False)
+    id_location = db.Column(db.Integer, db.ForeignKey('locations.id_location'), nullable=False)
+
 
     def __repr__(self):
         return f"<Hospital {self.id_hospital}>"

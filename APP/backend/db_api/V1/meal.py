@@ -44,12 +44,10 @@ class Meal(db.Model):
 class MealEaten(db.Model):
     __tablename__ = "meal_eaten"
     
-    id_patient = db.Column(db.Integer, primary_key=True)
-    id_meal = db.Column(db.Integer, db.ForeignKey('meals.id_meal'), nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False)
-
-    meal = db.relationship('Meal', backref=db.backref('meal_eaten', lazy=True))
-
+    id_patient = db.Column(db.Integer, db.ForeignKey('patients.id_profile'), nullable=False, primary_key=True)
+    id_meal = db.Column(db.Integer, db.ForeignKey('meals.id_meal'), nullable=False, primary_key=True)
+    date_time = db.Column(db.DateTime, nullable=False, primary_key=True)
+    
     def __repr__(self):
         return f"<MealEaten {self.id_patient}>"
 
@@ -65,7 +63,7 @@ class MealDiet(db.Model):
     __tablename__ = "meal_diet"
     
     id_meal = db.Column(db.Integer, db.ForeignKey('meals.id_meal'), primary_key=True)
-    id_account_patient = db.Column(db.Integer, db.ForeignKey('accounts.id_account'), primary_key=True)
+    id_diet_plan = db.Column(db.Integer, db.ForeignKey('diet_plan.id_plan'), primary_key=True)
 
     def __repr__(self):
         return f"<MealDiet {self.id_meal}, {self.id_account_patient}>"

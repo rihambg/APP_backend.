@@ -20,11 +20,11 @@ class PhysicalActivity(db.Model):
     __tablename__ = "physical_activity"
 
     id_activity = db.Column(db.Integer, primary_key=True)
-    activity_type = db.Column(db.Enum(ActivityType), nullable=False)
+    activity_type = db.Column(db.Enum(ActivityType, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     period = db.Column(db.Float, nullable=False)  # duration in minutes, for example
     burned_calories = db.Column(db.Float, nullable=False)
     date_time_activity = db.Column(db.DateTime, default=datetime.utcnow)
-    id_diet_plan = db.Column(db.Integer, nullable=False)  # Assuming it links to another table
+    id_diet_plan = db.Column(db.Integer, db.ForeignKey('diet_plan.id_plan'), nullable=False)
 
     def __str__(self):
         return f"PhysicalActivity({self.id_activity}, {self.activity_type}, {self.period}, {self.burned_calories}, {self.date_time_activity}, {self.id_diet_plan})"
