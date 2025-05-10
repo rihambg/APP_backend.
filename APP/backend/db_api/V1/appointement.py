@@ -24,7 +24,7 @@ class AppointementStatus(Enum):
 class Appointment(db.Model):
     __tablename__ = "appointments"
 
-    id_appointement = db.Column(db.Integer, primary_key=True)
+    id_appointement = db.Column(db.Integer, primary_key=True, autoincrement=True)
     appointement_type = db.Column(db.Enum(AppointementType,  values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id_profile'), nullable=False)

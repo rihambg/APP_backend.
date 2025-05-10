@@ -19,7 +19,7 @@ class ActivityType(Enum):
 class PhysicalActivity(db.Model):
     __tablename__ = "physical_activity"
 
-    id_activity = db.Column(db.Integer, primary_key=True)
+    id_activity = db.Column(db.Integer, primary_key=True, autoincrement=True)
     activity_type = db.Column(db.Enum(ActivityType, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     period = db.Column(db.Float, nullable=False)  # duration in minutes, for example
     burned_calories = db.Column(db.Float, nullable=False)

@@ -63,7 +63,7 @@ class CommunityPostReaction(db.Model):
 class CommunityPostComment(db.Model):
     __tablename__ = "community_post_comments"
     
-    id_comment = db.Column(db.Integer, primary_key=True)
+    id_comment = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_post = db.Column(db.Integer, db.ForeignKey('community_posts.id_post'),nullable=False)
     id_account_writer = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
     comment = db.Column(db.Text, nullable=False)

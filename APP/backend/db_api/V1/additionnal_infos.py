@@ -68,7 +68,7 @@ class PregnancyStatus(Enum):
 class AdditionnalInfos(db.Model):
     __tablename__ = "additionnal_infos"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_patient = db.Column(db.Integer, db.ForeignKey('patients.id_profile'), nullable=False)
     last_diagnosis = db.Column(db.Enum(LastDiagnosis, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     has_allergies = db.Column(db.Boolean, default=False)
@@ -101,7 +101,8 @@ class WomanAdditionnalInfos(db.Model):
     __tablename__ = "woman_additionnal_infos"
 
 
-    id = db.Column(db.Integer, primary_key=True)
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_patient = db.Column(db.Integer, db.ForeignKey('patients.id_profile'), nullable=False)
     last_diagnosis = db.Column(db.Enum(LastDiagnosis, values_callable=lambda obj: [e.value for e in obj]), nullable=False)
     has_allergies = db.Column(db.Boolean, default=False)

@@ -16,7 +16,7 @@ class MealType(Enum):
 class Meal(db.Model):
     __tablename__ = "meals"
     
-    id_meal = db.Column(db.Integer, primary_key=True)
+    id_meal = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     calories = db.Column(db.Integer, nullable=False)
     meal_type = db.Column(db.Enum(MealType, values_callable=lambda obj: [e.value for e in obj] ), nullable=False)

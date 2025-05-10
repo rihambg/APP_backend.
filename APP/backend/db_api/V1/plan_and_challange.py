@@ -10,7 +10,7 @@ app = Blueprint('plan_challange_routes', __name__)
 class DietPlan(db.Model):
     __tablename__ = "diet_plan"
     
-    id_plan = db.Column(db.Integer, primary_key=True)
+    id_plan = db.Column(db.Integer, primary_key=True , autoincrement=True)
     id_account_doctor = db.Column(db.Integer, db.ForeignKey('accounts.account_id'), nullable=False)
     id_account_patient = db.Column(db.Integer,db.ForeignKey('accounts.account_id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
@@ -38,7 +38,7 @@ class DietPlan(db.Model):
 class Challenge(db.Model):
     __tablename__ = "challenges"
     
-    id_challenge = db.Column(db.Integer, primary_key=True)
+    id_challenge = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_account_doctor = db.Column(db.Integer,  db.ForeignKey('accounts.account_id'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)

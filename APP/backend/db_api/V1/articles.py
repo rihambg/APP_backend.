@@ -10,7 +10,7 @@ app = Blueprint('articles_routes', __name__)
 class Article(db.Model):
     __tablename__ = "articles"
 
-    id_article = db.Column(db.Integer, primary_key=True)
+    id_article = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_account_writer = db.Column(db.Integer, db.ForeignKey('doctors.id_profile'), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)

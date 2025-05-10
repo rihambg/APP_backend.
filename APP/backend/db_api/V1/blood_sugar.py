@@ -17,7 +17,7 @@ class BloodSugarType(Enum):
 class BloodSugarRecord(db.Model):
     __tablename__ = "blood_sugar_records"
 
-    id_record = db.Column(db.Integer, primary_key=True)
+    id_record = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_account_patient = db.Column(db.Integer, nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
     level = db.Column(db.Float, nullable=False)
